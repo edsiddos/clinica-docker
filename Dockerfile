@@ -40,6 +40,8 @@ RUN a2enmod rewrite
 # Copia a configuração personalizada do PHP
 COPY php.ini /usr/local/etc/php/conf.d/custom.ini
 
+EXPOSE 80
+
 WORKDIR /var/www/html/clinica
 
 # Cria as pastas caso elas ainda não existam no container e define o dono como www-data

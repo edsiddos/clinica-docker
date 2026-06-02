@@ -1,13 +1,11 @@
-version: '3.8'
-
 services:
   # Servidor Web (Apache + PHP 8.3)
   web:
     build: .
-    container_name: app_web
+    container_name: web
     user: "${UID}:${GID}"
     ports:
-      - "8080:8080"
+      - "${WEB_PORT_EXT}:${WEB_PORT}"
     volumes:
       - ./src:/var/www/html
     environment:
@@ -15,16 +13,18 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=${DB_PORT}
+      - NPM_CONFIG_CACHE=/tmp/.npm # pasta de cache do npm
     depends_on:
-      - db
+      - database
 
   # Banco de Dados (PostgreSQL)
-  db:
+  database:
     image: postgres:16-alpine
-    container_name: app_db
+    container_name: database
     restart: always
     ports:
-      - "5432:5432"
+      - "${DB_PORT_EXT}:${DB_PORT}"
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
